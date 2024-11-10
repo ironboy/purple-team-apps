@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Protest+Strike&display=swap');
+
+body {
+  margin: 0;
+  background-color: black;
+  color: white;
+  font-family: 'Protest Strike';
+}
+
+h1 {
+  margin: 0;
+  height: 60px;
+  padding-top: 25px;
+  text-align: center;
+}
+
+h1 span {
+  color: #a274ff;
+}
+
+.info-img {
+  margin: 0;
+  background-image: url('red-purple-blue.png');
+  background-size: contain;
+  background-position: center top;
+  background-repeat: no-repeat;
+  height: calc(100vh - 80px);
+}
+
+@media (max-aspect-ratio: 1) {
+  .info-img {
+    background-image: url('red-purple-blue-vertical.png');
+    background-size: 90vw;
+    height: initial;
+    aspect-ratio: 635/3000;
+  }
+}

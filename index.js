@@ -1,5 +1,7 @@
+import path from 'path';
 import express from 'express';
 const port = 3000;
 const app = express();
-app.get('*', (_req, res) => res.send('Hello team XXX!'));
+app.use(express.static('frontend'));
+app.get('*', ((_req, res) => res.sendFile(path.join(import.meta.dirname, 'frontend', 'index.html'))));
 app.listen(port, () => console.log('Listening on http://localhost:' + port));
