@@ -1,4 +1,5 @@
 import express from 'express';
+const port = 3000;
 const app = express();
-app.get('*', (_req, res) => res.send('Hello team!'));
-app.listen(3000, () => console.log('Listening on http://localhost:80'));
+app.get('*', (_req, res) => res.send('Hello team XXX!'));
+app.listen(port, () => console.log('Listening on http://localhost:' + port));
