@@ -8,7 +8,7 @@ app.use(express.static('frontend'));
 
 app.get('/api/photolist', (req, res) => {
   try {
-    const folder = req.query.folder.replaceAll('.', '');
+    const folder = req.query.folder.replaceAll('..', '');
     const list = fs.readdirSync(path.join(import.meta.dirname, 'images', folder));
     res.json(list);
   }
@@ -18,13 +18,10 @@ app.get('/api/photolist', (req, res) => {
 });
 
 app.get('/api/photo', (req, res) => {
-  try {
-    const file = req.query.file.replaceAll('.', '');
-    res.sendFile(path.join(import.meta.dirname, 'images', file));
-  }
-  catch (_error) {
+  const file = req.query.file.replaceAll('..', '');
+  res.sendFile(path.join(import.meta.dirname, 'images', file), (_error) => {
     res.json({ error: 'No such file.' });
-  }
+  });
 });
 
 app.get('*', ((_req, res) =>
