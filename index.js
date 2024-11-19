@@ -1,30 +1,55 @@
-import fs from 'fs';
-import path from 'path';
 import express from 'express';
+import betterSqlite3 from 'better-sqlite3';
 
-const port = 3002;
+
+const db = betterSqlite3('products.db');
 const app = express();
-app.use(express.static('frontend'));
+const port = 3003;
 
-app.get('/api/photolist', (req, res) => {
-  try {
-    const folder = req.query.folder.replaceAll('..', '');
-    const list = fs.readdirSync(path.join(import.meta.dirname, 'images', folder));
-    res.json(list);
-  }
-  catch (_error) {
-    res.json({ error: 'No such folder.' });
-  }
+app.use(express.static('www'));
+
+app.use(express.json());
+
+app.get('/api/products', (req, res) => {
+  run(res, `
+    SELECT * FROM products
+  `, 'all');
 });
 
-app.get('/api/photo', (req, res) => {
-  const file = req.query.file.replaceAll('..', '');
-  res.sendFile(path.join(import.meta.dirname, 'images', file), (_error) => {
-    res.json({ error: 'No such file.' });
-  });
+app.get('/api/products/:id', (req, res) => {
+  req.body = { id: req.params.id };
+  run(res, `
+    SELECT * FROM products
+    WHERE id = ${req.params.id}
+  `, 'all');
 });
 
-app.get('*', ((_req, res) =>
-  res.sendFile(path.join(import.meta.dirname, 'frontend', 'index.html'))));
+app.post('/api/products', (req, res) => {
+  run(res, `
+    INSERT INTO products (${Object.keys(req.body)}) 
+    VALUES (${Object.values(req.body).map(x => "'" + x + "'")})
+  `);
+});
 
-app.listen(port, () => console.log('Listening on http://localhost:' + port));
+app.put('/api/products/:id', (req, res) => {
+  run(res, `
+    UPDATE products
+    SET ${Object.entries(req.body)
+      .map(([key, val]) => key + "= '" + val + "'")}
+    WHERE id = ${req.params.id}
+  `);
+});
+
+app.delete('/api/products/:id', (req, res) => {
+  run(res, `
+    DELETE FROM products
+    WHERE id = ${req.params.id}
+  `);
+});
+
+function run(res, query, type = 'run') {
+  res.json(db.prepare(query)[type]());
+}
+
+app.listen(port,
+  () => console.log('Listening on http://localhost:' + port));

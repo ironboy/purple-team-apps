@@ -1,16 +1,15 @@
 {
-  "name": "purple-team-apps",
+  "name": "sql-injections-exercise",
   "type": "module",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
+    "better-sqlite3": "^11.5.0",
     "express": "^4.21.1"
   }
 }
